@@ -34,7 +34,11 @@
         "vue",
         "ant-design-vue",
         "json-form",
-        "dynamic-form"
+        "dynamic-form",
+        "\"@form-create/utils\": \"^3.2.31\",",
+        "\"@form-create/ant-design-vue\": \"^3.2.33\",",
+        "\"@form-create/ant-design-vue\": \"../../artifacts/si-form-create\"",
+        "\"@form-create/ant-design-vue\": \"/private/var/deploy/nginx/html/si-form-create/packages/ant-design-vue\","
     ],
     "files": [
         "README.md",
@@ -81,7 +85,8 @@
         "vue": "^3.5"
     },
     "dependencies": {
-        "@form-create/ant-design-vue": "^3.2.33",
+
+        "@form-create/ant-design-vue": "file:/private/var/deploy/nginx/html/si-form-create/packages/ant-design-vue",
         "@form-create/component-wangeditor": "^3.2.14",
         "@form-create/utils": "^3.2.31",
         "ant-design-vue": "~4.2.6",

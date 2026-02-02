@@ -19,6 +19,11 @@ const menus = [
         title: '布局组件',
         list: []
     },
+    {
+        name: 'container',
+        title: '容器',
+        list: []
+    },
 ];
 
 export default menus;

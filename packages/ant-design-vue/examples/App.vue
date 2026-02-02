@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <div class="_fc-top">
+<!--        <div class="_fc-top">
             <div v-if="topImg" @click="goPro" class="js-top-img top_img"
                  style="background: url('https://static.form-create.com/file/img/top2.jpg');height: 60px;background-repeat: no-repeat;background-size: cover;background-position: center;">
                 <div class="container pos">
@@ -22,7 +22,7 @@
                     <a href="https://github.com/xaboy/form-create-designer" target="_blank" class="item">查看源码</a>
                 </div>
             </div>
-        </div>
+        </div>-->
         <fc-designer ref="designer" :config="config" :handle="handle" :locale="locale">
             <template #handle>
                 <div class="handle">
@@ -55,7 +55,7 @@
             </template>
         </fc-designer>
 
-        <div class="_fc-copyright" height="30px">
+<!--        <div class="_fc-copyright" height="30px">
             <div class="_fc-b-item">
                 <iframe
                     src="https://ghbtns.com/github-btn.html?user=xaboy&repo=form-create-designer&type=star&count=true"
@@ -73,7 +73,7 @@
                     <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="mit"/>
                 </a>
             </div>
-        </div>
+        </div>-->
         <a-modal :title="title[type]" v-model:open="state" class="_fc-t-dialog">
             <div ref="editor" v-if="state"></div>
             <span style="color: red;" v-if="err">输入内容格式有误!</span>
