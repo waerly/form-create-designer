@@ -9,7 +9,7 @@
     "module": "./dist/index.es.js",
     "scripts": {
         "clean": "rimraf dist/",
-        "dev": "vue-cli-service serve",
+        "dev": "vite",
         "build": "vite build --config ./vite.config.build.js && vite build --config ./vite.config.form.js",
         "build:form": "vite build --config ./vite.config.form.js",
         "build:locale": "gulp -f gulpfile.js",
@@ -38,7 +38,8 @@
         "\"@form-create/utils\": \"^3.2.31\",",
         "\"@form-create/ant-design-vue\": \"^3.2.33\",",
         "\"@form-create/ant-design-vue\": \"../../artifacts/si-form-create\"",
-        "\"@form-create/ant-design-vue\": \"/private/var/deploy/nginx/html/si-form-create/packages/ant-design-vue\","
+        "\"@form-create/ant-design-vue\": \"/private/var/deploy/nginx/html/si-form-create/packages/ant-design-vue\",",
+        "\"@form-create/ant-design-vue\": \"file:/private/var/deploy/nginx/html/si-form-create/packages/ant-design-vue\""
     ],
     "files": [
         "README.md",
@@ -86,7 +87,7 @@
     },
     "dependencies": {
 
-        "@form-create/ant-design-vue": "file:/private/var/deploy/nginx/html/si-form-create/packages/ant-design-vue",
+        "@form-create/ant-design-vue": "workspace:*",
         "@form-create/component-wangeditor": "^3.2.14",
         "@form-create/utils": "^3.2.31",
         "ant-design-vue": "~4.2.6",

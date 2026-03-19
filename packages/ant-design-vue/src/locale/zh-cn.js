@@ -443,6 +443,14 @@ const ZhCn = {
                 disabled: '是否禁用',
             }
         },
+        demo: {
+            name: 'Demo组件',
+            props: {
+                disabled: '是否禁用',
+                placeholder: '占位提示',
+                allowClear: '允许清空',
+            }
+        },
         col: {
             name: '布局格子',
             info: '通过响应式配置多端布局，移动端会自动应用第一个',
@@ -893,4 +901,3 @@ const ZhCn = {
 };
 
 export default ZhCn;
-

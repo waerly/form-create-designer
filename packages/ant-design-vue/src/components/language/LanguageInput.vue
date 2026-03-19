@@ -53,7 +53,8 @@ export default defineComponent({
     },
     computed: {
         isVar() {
-            return !!(this.modelValue || '').match(/^\{\{\s*\$t\.(.+)\s*\}\}$/);
+            // return !!(this.modelValue || '').match(/^\{\{\s*\$t\.(.+)\s*\}\}$/);
+            return !!(String(this.modelValue || '')).match(/^\{\{\s*\$t\.(.+)\s*\}\}$/);
         },
         t() {
             return this.designer.setupState.t;

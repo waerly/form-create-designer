@@ -443,6 +443,14 @@ const En = {
                 disabled: 'Disabled',
             }
         },
+        demo: {
+            name: 'Demo',
+            props: {
+                disabled: 'Disabled',
+                placeholder: 'Placeholder',
+                allowClear: 'Allow clear',
+            }
+        },
         col: {
             name: 'Col',
             info: 'Responsive layout configures multiple devices, with mobile automatically using the first one.',
@@ -892,4 +900,3 @@ const En = {
 };
 
 export default En;
-

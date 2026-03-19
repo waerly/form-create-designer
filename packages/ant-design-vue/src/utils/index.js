@@ -8,16 +8,18 @@ import {copy} from '@form-create/utils/lib/extend';
 
 export {formTemplate, formTemplateV3, htmlTemplate} from './template';
 
-
+// 生成“是否必填”的通用规则，供右侧校验配置面板复用。
 export function makeRequiredRule() {
     return {
         type: 'Required', field: 'formCreate$required', title: '是否必填'
     };
 }
 
+// 预留的 CodeMirror 快捷键扩展入口，当前项目中暂未实现。
 export function addAutoKeyMap(cm) {
 }
 
+// 生成树形选项的模拟数据，主要用于树组件/树选择组件的示例配置。
 export function makeTreeOptions(pre, config, level, data = []) {
     if (!config.id) {
         config.id = 1;
@@ -36,6 +38,8 @@ export function makeTreeOptions(pre, config, level, data = []) {
     return data;
 }
 
+// 生成“普通 options 配置”规则：
+// 支持在右侧面板里切换“静态结构”或“远程获取”两种配置方式。
 export function makeOptionsRule(t, to) {
     const options = [
         {'label': t('fetch.optionsType.struct'), 'value': 2},
@@ -83,6 +87,8 @@ export function makeOptionsRule(t, to) {
     };
 }
 
+// 生成“树形 options 配置”规则：
+// 和 makeOptionsRule 类似，但对应的是树形结构编辑器。
 export function makeTreeOptionsRule(t, to, label, value) {
     const options = [
         {'label': t('fetch.optionsType.struct'), 'value': 2},
@@ -133,10 +139,12 @@ export function makeTreeOptionsRule(t, to, label, value) {
     };
 }
 
+// 首字母转大写，常用于 formCreateXxx 这类字段名转换。
 export function upper(str) {
     return str.replace(str[0], str[0].toLocaleUpperCase());
 }
 
+// 将对象、数组、函数等转成可展示/可导出的字符串表达形式。
 export const toJSON = function (val) {
     const type = /object ([a-zA-Z]*)/.exec(Object.prototype.toString.call(val));
     if (type && _toJSON[type[1].toLowerCase()]) {
@@ -191,6 +199,7 @@ const _toJSON = {
     }
 };
 
+// 深度解析对象里的字符串函数，把字符串形式的方法还原成真正的函数。
 export const deepParseFn = function (target) {
     if (target && typeof target === 'object') {
         for (let key in target) {
@@ -209,6 +218,7 @@ export const deepParseFn = function (target) {
 };
 
 
+// 按 a.b.c 的路径从对象中安全取值，取不到时返回默认值。
 export function deepGet(object, path, defaultValue) {
     path = (path || '').split('.');
 
@@ -221,14 +231,17 @@ export function deepGet(object, path, defaultValue) {
     return (index && index === length) ? (object !== undefined ? object : defaultValue) : defaultValue;
 }
 
+// 构建国际化翻译函数。
 export const buildTranslator = (locale) => (path, option) => translate(path, option, unref(locale));
 
+// 从语言包中取文案，并支持 {key} 变量替换。
 export const translate = (path, option, locale) =>
     deepGet(locale, path, '').replace(
         /\{(\w+)\}/g,
         (_, key) => `${option?.[key] ?? `{${key}}`}`
     )
 
+// 构建一个完整的国际化上下文对象，统一提供 lang/name/locale/t。
 export const buildLocaleContext = (locale) => {
     const lang = computed(() => unref(locale).name)
     const name = computed(() => upper(toCase(lang.value || '')))
@@ -241,10 +254,12 @@ export const buildLocaleContext = (locale) => {
     }
 }
 
+// 当前设计器使用的 locale 封装入口，默认回落到中文包。
 export const useLocale = (locale) => {
     return buildLocaleContext(computed(() => locale.value || ZhCn))
 }
 
+// 对 options 的 label 做国际化转换。
 export const localeOptions = (t, options, prefix) => {
     return options.map(opt => {
         opt.label = t((prefix || 'props') + '.' + opt.label || opt.value) || opt.label;
@@ -252,6 +267,7 @@ export const localeOptions = (t, options, prefix) => {
     })
 }
 
+// 对右侧属性规则做国际化转换，主要处理 title 字段。
 export const localeProps = (t, prefix, rules) => {
     return rules.map(rule => {
         if (rule.field === 'formCreate$required') {
@@ -266,6 +282,7 @@ export const localeProps = (t, prefix, rules) => {
     })
 }
 
+// 根据当前设计态 rule 生成左侧“结构树”面板所需的数据。
 export const getRuleTree = (children) => {
     const tree = [];
     children && children.forEach(rule => {
@@ -287,6 +304,7 @@ export const getRuleTree = (children) => {
 }
 
 
+// 生成只保留 field 节点的描述树，常用于表单字段说明或子表单分析。
 export const getFormRuleDescription = (tree) => {
     const getTree = (children) => {
         const tree = [];
@@ -306,6 +324,7 @@ export const getFormRuleDescription = (tree) => {
     return getTree(tree);
 };
 
+// 生成一份更干净的规则描述树，便于调试、导出描述、AI 分析等场景使用。
 export const getRuleDescription = (children) => {
     const getTree = (children) => {
         const tree = [];
@@ -341,6 +360,7 @@ export const getRuleDescription = (children) => {
     return getTree(children);
 };
 
+// 生成 $inject 配置项的描述信息，供右侧面板展示帮助文案。
 export function getInjectArg(t) {
     return {
         name: '$inject',
@@ -348,19 +368,23 @@ export function getInjectArg(t) {
     }
 }
 
+// 判断一个坐标点是否落在某个 DOM 元素矩形区域内。
 export function isElementInside(x, y, element) {
     const rect = element.getBoundingClientRect();
     return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
 }
 
+// 统一判定“空值”，设计器里把空字符串/null/undefined 都视为可清理值。
 export function isNull(v) {
     return ['', null, undefined].indexOf(v) !== -1;
 }
 
+// 转义正则特殊字符，便于安全拼接动态正则。
 export function escapeRegExp(str) {
     return str.replace(/[\ .*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+// 比较版本号，返回 1 / 0 / -1。
 export function compareVersion(v1, v2) {
     const a1 = v1.split('.');
     const a2 = v2.split('.');
@@ -378,6 +402,7 @@ export function compareVersion(v1, v2) {
     return a1.length === a2.length ? 0 : (a1.length < a2.length ? -1 : 1);
 }
 
+// 复制文本到剪贴板，并弹出统一成功提示。
 export function copyTextToClipboard(text) {
     const textArea = document.createElement('textarea');
 
@@ -403,6 +428,7 @@ export function copyTextToClipboard(text) {
     document.body.removeChild(textArea);
 }
 
+// 数组去重，保留首次出现的元素顺序。
 export function uniqueArray(arr) {
     return arr.filter((item, index) => arr.indexOf(item) === index);
 }
@@ -468,6 +494,7 @@ export function throttle(func, delay, options = {}) {
     return throttled;
 }
 
+// 为树形节点补充不可枚举的 $parent 引用，便于向上查找父节点。
 export function addParentReference(nodes, parent = null) {
     nodes.forEach(node => {
         // 为当前节点添加 $parent 字段
@@ -486,6 +513,8 @@ export function addParentReference(nodes, parent = null) {
     return nodes;
 }
 
+// 生成“标题切换”规则：
+// 允许组件在原生标题和自定义标题之间切换。
 export const makeTitleRule = ()=>{
     return [
         {

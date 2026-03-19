@@ -47,7 +47,7 @@
                             <a-menu>
                                 <a-menu-item @click="showJson">生成JSON</a-menu-item>
                                 <a-menu-item @click="showOption">生成Options</a-menu-item>
-                                <a-menu-item @click="copyUrl">生成预览链接</a-menu-item>
+                                <a-menu-item @click="copyUrl">生成预览链接22</a-menu-item>
                             </a-menu>
                         </template>
                     </a-dropdown>
@@ -107,7 +107,10 @@ import 'codemirror/mode/htmlmixed/htmlmixed';
 import 'codemirror/mode/pug/pug';
 
 import is from '@form-create/utils/lib/type';
-import formCreate from '@form-create/ant-design-vue';
+import * as formCreateModule from '@form-create/ant-design-vue';
+import {maker} from '@form-create/ant-design-vue';
+const formCreate = formCreateModule.default;
+const formHelper = formCreateModule.formHelper;
 import ZhCn from "../src/locale/zh-cn";
 import En from "../src/locale/en";
 import {copyTextToClipboard} from "../src/utils";
@@ -305,6 +308,56 @@ export default {
             }
             this.state = false;
         },
+        testformHelper() {
+            console.log('========== formHelper 测试开始 ==========');
+            console.log('formCreateModule:', formCreateModule);
+            console.log('formHelper 对象:', formHelper);
+            console.log('formHelper 类型:', typeof formHelper);
+
+            // 1. 测试静态方法 - 获取组件类型列表
+            const types = formHelper.getComponentTypes();
+            console.log('1. 支持的组件类型:', types);
+
+            // 2. 测试静态方法 - 获取组件配置
+            const inputConfig = formHelper.getComponentConfig('input');
+            console.log('2. Input 组件配置:', inputConfig);
+
+            // 3. 测试快捷创建方法
+            const inputRule = formHelper.input('username', '用户名', {required: true});
+            console.log('3. 创建的 Input 规则:', inputRule);
+
+            const selectRule = formHelper.select('status', '状态', [
+                {label: '启用', value: 1},
+                {label: '禁用', value: 0}
+            ]);
+            console.log('4. 创建的 Select 规则:', selectRule);
+
+            // 4. 测试批量创建
+            const rules = formHelper.createBatch([
+                {type: 'input', field: 'name', title: '姓名', required: true},
+                {type: 'select', field: 'gender', title: '性别', options: [{label: '男', value: 1}, {label: '女', value: 2}]},
+                {type: 'datePicker', field: 'birthday', title: '生日'}
+            ]);
+            console.log('5. 批量创建的规则:', rules);
+
+            // 5. 测试设计器相关方法
+            const categories = formHelper.getCategories();
+            console.log('6. 组件分类:', categories);
+
+            const componentsByCategory = formHelper.getComponentsByCategory();
+            console.log('7. 按分类获取组件:', componentsByCategory);
+
+            // 6. 测试模板功能
+            const templates = formHelper.getTemplates();
+            console.log('8. 预设模板:', templates);
+
+            // 7. 测试工具方法
+            const options = formHelper.normalizeOptions(['选项1', '选项2', '选项3']);
+            console.log('9. 标准化选项:', options);
+
+            console.log('========== formHelper 测试完成 ==========');
+            console.log('✅ formHelper 工具类导入成功且功能正常!');
+        },
         makeTemplate() {
             const rule = this.$refs.designer.getRule();
             const opt = this.$refs.designer.getOption();
@@ -338,6 +391,10 @@ export default {
         }
     },
     mounted() {
+        // ========== formHelper 测试 ==========
+        this.testformHelper();
+        // =====================================
+
         if (this.hashData && this.hashData.rule) {
             this.$refs.designer.setRule(this.hashData.rule);
             if (this.hashData.options) {
@@ -358,7 +415,23 @@ export default {
             // if (cache.opt) {
             //     this.$refs.designer.setOption(cache.opt);
             // }
-            this.$refs.designer.setRule("[{\"type\":\"html\",\"native\":true,\"attrs\":{\"innerHTML\":\"\"},\"style\":{\"display\":\"block\",\"width\":\"100%\"},\"children\":[\"<div class=\\\"_fd-view-box\\\">\\n  <div class=\\\"title\\\">FormCreate 设计器开源版演示站</div>\\n  <div class=\\\"desc\\\">开源免费可商用的可视化表单设计器</div>\\n<div class=\\\"_fd-view-products\\\">\\n        <a class=\\\"_fd-view-product\\\" href=\\\"https://form-create.com/v3/designer\\\" target=\\\"_blank\\\">\\n            <div><div>ElementPlus版PC端设计器👨🏻‍💻(Vue3)</div><span>立即体验</span></div> <span>采用 Vue3.0 和 ElementPlus 进行页面构建</span>\\n        </a>\\n        <a class=\\\"_fd-view-product vue2\\\" href=\\\"https://form-create.com/designer\\\" target=\\\"_blank\\\">\\n            <div><div>ElementUI版PC端设计器👨🏻‍💻(Vue2)</div><span>立即体验</span></div> <span>采用 Vue2.7 和 ElementUI 进行页面构建</span>\\n        </a>\\n        <a class=\\\"_fd-view-product\\\" href=\\\"https://form-create.com/v3/mobile\\\" target=\\\"_blank\\\">\\n            <div><div>ElementPlus版移动端设计器📱(Vue3)</div><span>立即体验</span></div> <span>采用 Vue3.0 和 ElementPlus 进行页面构建，移动端采用Vant4.0</span>\\n        </a>\\n        <a class=\\\"_fd-view-product\\\" href=\\\"https://form-create.com/v3/antd/designer\\\" target=\\\"_blank\\\">\\n            <div><div>Ant Design Vue版PC端设计器👨🏻‍💻(Vue3)</div><span>立即体验</span></div> <span>采用 Vue3.0 和 Ant Design Vue 进行页面构建</span>\\n        </a>\\n    </div>\\n</div>\"],\"_fc_id\":\"id_Fr6ym35jirw4acc\",\"name\":\"ref_Fcfnm35jirw4adc\",\"_fc_drag_tag\":\"html\",\"display\":true,\"hidden\":false},{\"type\":\"html\",\"native\":true,\"attrs\":{\"innerHTML\":\"\"},\"style\":{\"display\":\"block\",\"width\":\"100%\"},\"children\":[\"<div class=\\\"_fd-view-box\\\">\\n  <div class=\\\"title\\\">FormCreate 设计器<span style=\\\"color:#cd7f32;\\\">高级版</span>演示站</div>\\n  <div class=\\\"desc\\\">全面实现多端表单设计，为企业提供低代码表单解决方案</div>\\n<div class=\\\"_fd-view-products\\\">\\n        <a class=\\\"_fd-view-product\\\" href=\\\"https://pro.form-create.com/view\\\" target=\\\"_blank\\\">\\n            <div><div>ElementPlus版PC端设计器👨🏻‍💻(Vue3)</div><span>立即体验</span></div> <span>采用 Vue3.0 和 ElementPlus 进行页面构建</span>\\n        </a>\\n        <a class=\\\"_fd-view-product vue2\\\" href=\\\"https://pro.form-create.com/vue2/view\\\" target=\\\"_blank\\\">\\n            <div><div>ElementUI版PC端设计器👨🏻‍💻(Vue2)</div><span>立即体验</span></div> <span>采用 Vue2.7 和 ElementUI 进行页面构建</span>\\n        </a>\\n        <a class=\\\"_fd-view-product\\\" href=\\\"https://pro.form-create.com/mobile\\\" target=\\\"_blank\\\">\\n            <div><div>ElementPlus版移动端设计器📱(Vue3)</div><span>立即体验</span></div> <span>采用 Vue3.0 和 ElementPlus 进行页面构建，移动端采用Vant4.0</span>\\n        </a>\\n        <a class=\\\"_fd-view-product vue2\\\" href=\\\"https://pro.form-create.com/vue2/mobile\\\" target=\\\"_blank\\\">\\n            <div><div>ElementUI版移动端设计器📱(Vue2)</div><span>立即体验</span></div> <span>采用 Vue2.7 和 ElementUI 进行页面构建，移动端采用Vant2.0</span>\\n        </a>\\n        <a class=\\\"_fd-view-product\\\" href=\\\"https://pro.form-create.com/antd/view\\\" target=\\\"_blank\\\">\\n            <div><div>Ant Design Vue版PC端设计器👨🏻‍💻(Vue3)</div><span>立即体验</span></div> <span>采用 Vue3.0 和 Ant Design Vue 进行页面构建</span>\\n        </a>\\n        <a class=\\\"_fd-view-product vue2\\\" href=\\\"https://pro.form-create.com/vue2/antd/view\\\" target=\\\"_blank\\\">\\n            <div><div>Ant Design Vue版PC端设计器👨🏻‍💻(Vue2)</div><span>立即体验</span></div> <span>采用 Vue2.7 和 Ant Design Vue 进行页面构建</span>\\n        </a>\\n        <a class=\\\"_fd-view-product\\\" href=\\\"https://pro.form-create.com/antd/mobile\\\" target=\\\"_blank\\\">\\n            <div><div>Ant Design Vue版移动端设计器📱(Vue3)</div><span>立即体验</span></div> <span>采用 Vue3.0 和 Ant Design Vue 进行页面构建，移动端采用Vant4.0</span>\\n        </a>\\n        <a class=\\\"_fd-view-product vue2\\\" href=\\\"https://pro.form-create.com/vue2/antd/mobile\\\" target=\\\"_blank\\\">\\n            <div><div>Ant Design Vue版移动端设计器📱(Vue2)</div><span>立即体验</span></div> <span>采用 Vue2.7 和 Ant Design Vue 进行页面构建，移动端采用Vant2.0</span>\\n        </a>\\n    </div>\\n</div>\"],\"_fc_id\":\"id_Fv9um7t07ek9abc\",\"name\":\"ref_Fwthm7t07ek9acc\",\"_fc_drag_tag\":\"html\",\"display\":true,\"hidden\":false}]");
+            // this.$refs.designer.setRule("[{\"type\":\"html\",\"native\":true,\"attrs\":{\"innerHTML\":\"\"},\"style\":{\"display\":\"block\",\"width\":\"100%\"},\"children\":[\"<div class=\\\"_fd-view-box\\\">\\n  <div class=\\\"title\\\">FormCreate 设计器开源版演示站</div>\\n  <div class=\\\"desc\\\">开源免费可商用的可视化表单设计器</div>\\n<div class=\\\"_fd-view-products\\\">\\n        <a class=\\\"_fd-view-product\\\" href=\\\"https://form-create.com/v3/designer\\\" target=\\\"_blank\\\">\\n            <div><div>ElementPlus版PC端设计器👨🏻‍💻(Vue3)</div><span>立即体验</span></div> <span>采用 Vue3.0 和 ElementPlus 进行页面构建</span>\\n        </a>\\n        <a class=\\\"_fd-view-product vue2\\\" href=\\\"https://form-create.com/designer\\\" target=\\\"_blank\\\">\\n            <div><div>ElementUI版PC端设计器👨🏻‍💻(Vue2)</div><span>立即体验</span></div> <span>采用 Vue2.7 和 ElementUI 进行页面构建</span>\\n        </a>\\n        <a class=\\\"_fd-view-product\\\" href=\\\"https://form-create.com/v3/mobile\\\" target=\\\"_blank\\\">\\n            <div><div>ElementPlus版移动端设计器📱(Vue3)</div><span>立即体验</span></div> <span>采用 Vue3.0 和 ElementPlus 进行页面构建，移动端采用Vant4.0</span>\\n        </a>\\n        <a class=\\\"_fd-view-product\\\" href=\\\"https://form-create.com/v3/antd/designer\\\" target=\\\"_blank\\\">\\n            <div><div>Ant Design Vue版PC端设计器👨🏻‍💻(Vue3)</div><span>立即体验</span></div> <span>采用 Vue3.0 和 Ant Design Vue 进行页面构建</span>\\n        </a>\\n    </div>\\n</div>\"],\"_fc_id\":\"id_Fr6ym35jirw4acc\",\"name\":\"ref_Fcfnm35jirw4adc\",\"_fc_drag_tag\":\"html\",\"display\":true,\"hidden\":false},{\"type\":\"html\",\"native\":true,\"attrs\":{\"innerHTML\":\"\"},\"style\":{\"display\":\"block\",\"width\":\"100%\"},\"children\":[\"<div class=\\\"_fd-view-box\\\">\\n  <div class=\\\"title\\\">FormCreate 设计器<span style=\\\"color:#cd7f32;\\\">高级版</span>演示站</div>\\n  <div class=\\\"desc\\\">全面实现多端表单设计，为企业提供低代码表单解决方案</div>\\n<div class=\\\"_fd-view-products\\\">\\n        <a class=\\\"_fd-view-product\\\" href=\\\"https://pro.form-create.com/view\\\" target=\\\"_blank\\\">\\n            <div><div>ElementPlus版PC端设计器👨🏻‍💻(Vue3)</div><span>立即体验</span></div> <span>采用 Vue3.0 和 ElementPlus 进行页面构建</span>\\n        </a>\\n        <a class=\\\"_fd-view-product vue2\\\" href=\\\"https://pro.form-create.com/vue2/view\\\" target=\\\"_blank\\\">\\n            <div><div>ElementUI版PC端设计器👨🏻‍💻(Vue2)</div><span>立即体验</span></div> <span>采用 Vue2.7 和 ElementUI 进行页面构建</span>\\n        </a>\\n        <a class=\\\"_fd-view-product\\\" href=\\\"https://pro.form-create.com/mobile\\\" target=\\\"_blank\\\">\\n            <div><div>ElementPlus版移动端设计器📱(Vue3)</div><span>立即体验</span></div> <span>采用 Vue3.0 和 ElementPlus 进行页面构建，移动端采用Vant4.0</span>\\n        </a>\\n        <a class=\\\"_fd-view-product vue2\\\" href=\\\"https://pro.form-create.com/vue2/mobile\\\" target=\\\"_blank\\\">\\n            <div><div>ElementUI版移动端设计器📱(Vue2)</div><span>立即体验</span></div> <span>采用 Vue2.7 和 ElementUI 进行页面构建，移动端采用Vant2.0</span>\\n        </a>\\n        <a class=\\\"_fd-view-product\\\" href=\\\"https://pro.form-create.com/antd/view\\\" target=\\\"_blank\\\">\\n            <div><div>Ant Design Vue版PC端设计器👨🏻‍💻(Vue3)</div><span>立即体验</span></div> <span>采用 Vue3.0 和 Ant Design Vue 进行页面构建</span>\\n        </a>\\n        <a class=\\\"_fd-view-product vue2\\\" href=\\\"https://pro.form-create.com/vue2/antd/view\\\" target=\\\"_blank\\\">\\n            <div><div>Ant Design Vue版PC端设计器👨🏻‍💻(Vue2)</div><span>立即体验</span></div> <span>采用 Vue2.7 和 Ant Design Vue 进行页面构建</span>\\n        </a>\\n        <a class=\\\"_fd-view-product\\\" href=\\\"https://pro.form-create.com/antd/mobile\\\" target=\\\"_blank\\\">\\n            <div><div>Ant Design Vue版移动端设计器📱(Vue3)</div><span>立即体验</span></div> <span>采用 Vue3.0 和 Ant Design Vue 进行页面构建，移动端采用Vant4.0</span>\\n        </a>\\n        <a class=\\\"_fd-view-product vue2\\\" href=\\\"https://pro.form-create.com/vue2/antd/mobile\\\" target=\\\"_blank\\\">\\n            <div><div>Ant Design Vue版移动端设计器📱(Vue2)</div><span>立即体验</span></div> <span>采用 Vue2.7 和 Ant Design Vue 进行页面构建，移动端采用Vant2.0</span>\\n        </a>\\n    </div>\\n</div>" +
+            //     "\"],\"_fc_id\":\"id_Fv9um7t07ek9abc\",\"name\":\"ref_Fwthm7t07ek9acc\",\"_fc_drag_tag\":\"html\",\"display\":true,\"hidden\":false}]");
+            //测试添加规则
+          // this.$refs.designer.setRule([formHelper.input("name","姓名")])
+          let testRule=[maker.input('商品名称2', 'goods_name', 'iphone').props({
+            placeholder: '请输入商品名称',
+            clearable: true,
+            disabled: false,
+          }).validate([
+            {required: true, message: '请输入商品名称', trigger: 'blur'}
+          ]).emit(['change']).className('goods-name').children([
+            maker.create('template').children(['append']).slot('addonAfter')
+          ]).info({info: '请输入商品名称!!!!!', type: 'tooltip'}).getRule()];
+          console.log("rule>>>",testRule);
+          this.$refs.designer.setRule(testRule);
+
+
             this.$refs.designer.setOption({
                 language: {
                     "zh-cn": {

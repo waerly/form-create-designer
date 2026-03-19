@@ -40,12 +40,13 @@ import tableFormColumn from './rule/tableFormColumn';
 import image from './rule/image';
 import signaturePad from './rule/signaturePad';
 import title from './rule/title';
+import demo from './rule/demo';
 
 
 const ruleList = [
     input, textarea, password, number, radio, checkbox, select, _switch, rate, time, timeRange, slider, date, dateRange, cascader, upload, transfer, tree, treeSelect, editor, signaturePad,
     group, subForm, tableForm, tableFormColumn,
-    alert, button, text, title, html, divider, tag, image,
+    alert, button, text, title, demo, html, divider, tag, image,
     row, table, tabs, space, card, collapse,
     col, tabPane, collapseItem,
 ];

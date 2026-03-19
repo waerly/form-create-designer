@@ -410,7 +410,7 @@
                         <pre class="_fd-preview-code" ref="previewCode" v-else-if="previewStatus === 'component'"><code v-html="preview.component"></code></pre>
                         <pre class="_fd-preview-code" ref="previewCode" v-else><code v-html="preview.html"></code></pre>
                     </a-modal>
-                    <a-modal v-model:open="previewData.state" :title="t('form.formData')" width="600px" centered :footer="null">
+                    <a-modal v-model:open="previewData.state" :title="t('form.formData')" width="600px" centered :footer="null" :z-index="2000">
                         <pre class="_fd-preview-code" style="max-height: 400px; overflow: auto;"><code>{{ previewData.json }}</code></pre>
                     </a-modal>
                 </a-layout>
@@ -571,6 +571,8 @@ export default defineComponent({
         }
         const t = (...args) => _t(...args);
 
+        // 统一整理外部注入的规则配置。
+        // 这样无论是内置组件还是外部扩展组件，都走同一套规则合并逻辑。
         const tidyRuleConfig = (orgRule, configRule, ...args) => {
             if (configRule) {
                 if (is.Function(configRule)) {
@@ -591,6 +593,11 @@ export default defineComponent({
 
         const defaultMenus = ref(deepCopy(menus));
 
+        // 设计器的核心状态都放在这里：
+        // - 左侧菜单和组件树
+        // - 中间画布节点
+        // - 右侧配置表单
+        // - 预览、表单数据、操作历史
         const data = reactive({
             cacheProps: {},
             operation: {
@@ -1005,6 +1012,8 @@ export default defineComponent({
             updateName() {
                 data.activeRule.name = 'ref_' + uniqueId();
             },
+            // 创建设计态专用的拖拽容器。
+            // 这个容器只在设计器里存在，导出最终 rule 时会被剥离掉。
             makeDrag(group, tag, children, on, slot) {
                 return {
                     type: 'DragBox',
@@ -1047,6 +1056,7 @@ export default defineComponent({
                 data.unloadStatus = false;
                 vm.emit('clear');
             },
+            // 画布根节点始终是一个顶层 DragBox，用来承载当前所有子节点。
             makeDragRule(children) {
                 return methods.makeChildren([methods.makeDrag(true, 'draggable', children, {
                     add: (inject, evt) => methods.dragAdd(children, evt),
@@ -1097,12 +1107,15 @@ export default defineComponent({
             getHtml() {
                 return htmlTemplate(methods.getJson(), methods.getOptionsJson());
             },
+            // 导出给 si-form-create 使用的最终规则树。
+            // 这里会移除 DragTool / DragBox 这些设计器壳，以及设计器私有字段。
             getRule() {
                 return methods.parseRule(deepCopy(data.dragForm.rule[0].children));
             },
             getJson() {
                 return designerForm.toJson(methods.getRule());
             },
+            // 把右侧表单维护的配置值重新还原成干净的 option 对象。
             getOption() {
                 const options = deepCopy(data.formOptions);
                 ['onReset', 'onSubmit', 'beforeSubmit', 'onCreated', 'onMounted', 'onReload', 'onChange', 'beforeFetch'].forEach(key => {
@@ -1153,6 +1166,8 @@ export default defineComponent({
             getOptionsJson() {
                 return designerForm.toJson([methods.getOption()]).slice(1).slice(0, -1);
             },
+            // 把外部传入的运行时 rule 转成设计器内部结构：
+            // runtime rule -> 内部 children -> 设计态拖拽画布
             setRule(rules) {
                 if (!rules) {
                     rules = [];
@@ -1298,6 +1313,9 @@ export default defineComponent({
                 });
                 data.form.value = value;
             },
+            // 把运行时规则转换成设计器规则：
+            // 1. 给节点补上 _menu 等元信息
+            // 2. 按需要包上 DragTool / DragBox 设计器壳
             loadRule(rules, pConfig, template) {
                 const loadRule = [];
                 rules.forEach(rule => {
@@ -1337,6 +1355,8 @@ export default defineComponent({
                 });
                 return loadRule;
             },
+            // loadRule 的逆过程：
+            // 去掉设计器壳和私有字段，恢复成 si-form-create 运行时可直接消费的规则。
             parseRule(children, pSlot) {
                 return [...children].reduce((initial, rule) => {
                     let slot = pSlot;
@@ -1468,6 +1488,8 @@ export default defineComponent({
                 }
                 methods.handleChange('', field, value, _, fapi);
             },
+            // 右侧配置区统一回写入口。
+            // 负责把表单字段映射回当前激活的 rule，并记录操作历史。
             handleChange(key, field, value, _, fapi) {
                 if (data.activeRule && fapi[data.activeRule._fc_id] === data.activeRule) {
                     methods.unWatchActiveRule();
@@ -1580,6 +1602,11 @@ export default defineComponent({
                 }
                 return propsRule;
             },
+            /**
+             * 根据id查找rule【特定场景，内部用】
+             * @param id
+             * @return {undefined}
+             */
             findRule(id) {
                 let rule = undefined;
                 const findTree = children => {
@@ -1594,6 +1621,7 @@ export default defineComponent({
                 findTree(data.treeInfo);
                 return rule;
             },
+            // 激活画布中的一个节点，并重新生成右侧配置区对应的表单内容。
             toolActive(rule) {
                 if (configRef.value.beforeActiveRule && false === configRef.value.beforeActiveRule({rule})) {
                     return;
@@ -1687,6 +1715,8 @@ export default defineComponent({
                 })
                 return permission;
             },
+            // 把当前选中的 rule 映射到不同的右侧配置表单中。
+            // 右侧表单编辑的是一份拍平后的结构，而不是直接操作嵌套 rule。
             updateRuleFormData() {
                 const rule = data.activeRule;
                 let formData = {
@@ -1749,12 +1779,12 @@ export default defineComponent({
                 }
             },
             dragStart(children) {
-                // console.log('top dragStart')
+                // 记录本次拖拽开始时的容器，供后续排序和跨容器移动使用。
                 data.moveRule = children;
                 data.added = false;
             },
             dragUnchoose(children, evt) {
-                // console.log('top dragUnchoose')
+                // 记录原始位置，后续如果是跨容器拖动，需要先从旧容器中移除。
                 data.addRule = {
                     children,
                     oldIndex: evt.oldIndex
@@ -1775,6 +1805,8 @@ export default defineComponent({
                 }
                 return flag;
             },
+            // 把左侧菜单中的组件插入到目标容器。
+            // 这里处理的是“新增组件”，不是已有节点的移动。
             dragMenu({menu, children, index, slot}) {
                 if (data.inputForm.state) {
                     return;
@@ -1944,8 +1976,10 @@ export default defineComponent({
                 }
                 return !(globalDenyDrag && checkDragCondition(globalDenyDrag));
             },
+            // 同时处理两种情况：
+            // 1. 从左侧菜单克隆一个新组件到画布
+            // 2. 把画布中的已有节点移动到其它容器
             dragAdd(children, evt, slot) {
-                // console.log('top dragAdd')
                 delete evt.item._fc_allow_drag;
                 const newIndex = evt.newIndex;
                 const menu = evt.item._underlying_vm_ || evt.item.__rule__;
@@ -1965,7 +1999,6 @@ export default defineComponent({
                 } else {
                     methods.dragMenu({menu, children, index: newIndex, slot});
                 }
-                // data.dragForm.api.refresh();
             },
             dragEnd(children, {item, newIndex, oldIndex}, slot) {
                 delete item._fc_allow_drag;
@@ -1981,7 +2014,6 @@ export default defineComponent({
                 data.moveRule = null;
                 data.addRule = null;
                 data.added = false;
-                // data.dragForm.api.refresh();
             },
             getSlotConfig(pConfig, slot, config) {
                 let slotConfig = {};
@@ -1992,6 +2024,8 @@ export default defineComponent({
                 });
                 return {...config, dragBtn: false, handleBtn: config.children ? ['addChild'] : false, ...slotConfig}
             },
+            // 根据拖拽规则配置构建一个设计态节点。
+            // 组件默认的 field/name/id，以及设计器壳，都是在这里补齐的。
             makeRule(config, _rule) {
                 let rule = _rule || config.rule({t});
                 const updateRule = updateDefaultRule.value && updateDefaultRule.value[config.name];

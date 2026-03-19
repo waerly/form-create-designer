@@ -1,2 +1,3 @@
 packages:
 - 'packages/*'
+- '/private/var/deploy/nginx/html/si-form-create/packages/*'
