@@ -63,7 +63,7 @@ export default function form({t}) {
         }, {
             type: 'switch',
             field: '_submitBtn>show',
-            value: true,
+            value: false,
             title: t('form.submitBtn'),
         }, {
             type: 'switch',

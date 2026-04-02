@@ -756,6 +756,35 @@ const En = {
                 allowHalf: 'Whether to allow half selection',
             }
         },
+        autoComplete: {
+            name: 'AutoComplete',
+            event: {
+                search: 'Triggered when the input value changes',
+                select: 'Triggered when a suggestion is selected',
+            },
+            props: {
+                disabled: 'Disabled',
+                allowClear: 'Whether to show the clear button',
+                placeholder: 'Placeholder',
+                backfill: 'Whether to backfill the selected item into the input box',
+                defaultActiveFirstOption: 'Whether to highlight the first option by default',
+                bordered: 'Whether there is a border',
+            }
+        },
+        suggestSearch: {
+            name: 'Suggest Search',
+            props: {
+                disabled: 'Disabled',
+                allowClear: 'Whether to show the clear button',
+                placeholder: 'Placeholder',
+                bordered: 'Whether there is a border',
+                mode: 'Mode',
+            },
+            modeOpt: {
+                default: 'Single',
+                multiple: 'Multiple',
+            }
+        },
         select: {
             name: 'Select',
             event: {

@@ -1247,7 +1247,7 @@ export default defineComponent({
                     options.language = {};
                 }
                 options._resetBtn = typeof options.resetBtn === 'object' ? options.resetBtn : {show: options.resetBtn === true};
-                options._submitBtn = typeof options.submitBtn === 'object' ? options.submitBtn : {show: options.submitBtn !== false};
+                options._submitBtn = typeof options.submitBtn === 'object' ? options.submitBtn : {show: options.submitBtn === true};
                 options.submitBtn = options.resetBtn = false;
                 data.inputForm.data = options.formData || {};
                 data.oldOptionsKeys = Object.keys(data.form.value);

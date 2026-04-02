@@ -4,6 +4,8 @@ import input from './rule/input';
 import textarea from './rule/textarea';
 import password from './rule/password';
 import number from './rule/number';
+import autoComplete from './rule/autoComplete';
+import suggestSearch from './rule/suggestSearch';
 import select from './rule/select';
 import _switch from './rule/switch';
 import slider from './rule/slider';
@@ -41,12 +43,16 @@ import image from './rule/image';
 import signaturePad from './rule/signaturePad';
 import title from './rule/title';
 import demo from './rule/demo';
+import siSlot from './rule/siSlot';
+import relation from './rule/relation';
+import relationForm from './rule/relationForm';
+import relationTable from './rule/relationTable';
 
 
 const ruleList = [
-    input, textarea, password, number, radio, checkbox, select, _switch, rate, time, timeRange, slider, date, dateRange, cascader, upload, transfer, tree, treeSelect, editor, signaturePad,
+    input, textarea, password, number, autoComplete, suggestSearch, radio, checkbox, select, _switch, rate, time, timeRange, slider, date, dateRange, cascader, upload, transfer, tree, treeSelect, editor, signaturePad,
     group, subForm, tableForm, tableFormColumn,
-    alert, button, text, title, demo, html, divider, tag, image,
+    alert, button, text, title, demo, siSlot, relation, relationForm, relationTable, html, divider, tag, image,
     row, table, tabs, space, card, collapse,
     col, tabPane, collapseItem,
 ];

@@ -757,6 +757,38 @@ const ZhCn = {
                 allowHalf: '是否允许半选',
             }
         },
+        autoComplete: {
+            name: '自动完成',
+            event: {
+                search: '输入内容变化时触发',
+                select: '选中建议项时触发',
+            },
+            props: {
+                disabled: '是否禁用',
+                allowClear: '是否显示清除按钮',
+                placeholder: '占位符',
+                backfill: '选中选项时是否回填到输入框',
+                defaultActiveFirstOption: '是否默认高亮第一项',
+                bordered: '是否有边框',
+            }
+        },
+        suggestSearch: {
+            name: '建议搜索',
+            props: {
+                disabled: '是否禁用',
+                allowClear: '是否显示清除按钮',
+                placeholder: '占位符',
+                bordered: '是否有边框',
+                mode: '模式',
+                autoSearchOnFocus: '聚焦自动搜索',
+                maxCount: '最多可选数',
+            },
+            modeOpt: {
+                default: '单选',
+                multiple: '多选',
+                tags: '允许创建',
+            }
+        },
         select: {
             name: '选择器',
             event: {
