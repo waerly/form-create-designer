@@ -804,6 +804,75 @@ const En = {
                 mode: 'Mode',
             }
         },
+        siUpload: {
+            name: 'SI Upload',
+            props: {
+                disabled: 'Disabled',
+                uploadProvider: 'Provider',
+                isPrivate: 'Is Private',
+                uploadType: 'Upload Type',
+                previewSize: 'Preview Size',
+                valueType: 'Value Type',
+                action: 'Upload URL',
+                name: 'File Field Name',
+                deleteAction: 'Delete URL',
+                accept: 'Accept',
+                limit: 'Max Count',
+                maxSize: 'Max Size(MB)',
+                multiple: 'Multiple',
+                uploadText: 'Upload File',
+                uploadTip: 'Tip',
+            }
+        },
+        siImageUpload: {
+            name: 'SI Image Upload',
+            props: {
+                disabled: 'Disabled',
+                uploadProvider: 'Provider',
+                isPrivate: 'Is Private',
+                previewSize: 'Preview Size',
+                valueType: 'Value Type',
+                action: 'Upload URL',
+                name: 'File Field Name',
+                deleteAction: 'Delete URL',
+                limit: 'Max Count',
+                maxSize: 'Max Size(MB)',
+                uploadText: 'Upload Image',
+                uploadTip: 'Tip',
+            }
+        },
+        siRichEditor2: {
+            name: 'SI Rich Editor 2',
+            props: {
+                disabled: 'Disabled',
+                placeholder: 'Placeholder',
+                height: 'Editor Height',
+                minHeight: 'Min Height',
+                uploadProvider: 'Provider',
+                isPrivate: 'Is Private',
+                action: 'Default Upload URL',
+                uploadImgAction: 'Image Upload URL',
+                uploadVideoAction: 'Video Upload URL',
+                uploadFileAction: 'File Upload URL',
+                name: 'File Field Name',
+                maxImageSize: 'Image Size(MB)',
+                maxVideoSize: 'Video Size(MB)',
+                maxAttachmentSize: 'Attachment Size(MB)',
+            }
+        },
+        siUserPicker: {
+            name: 'SI User Picker',
+            props: {
+                disabled: 'Disabled',
+                placeholder: 'Placeholder',
+                multiple: 'Multiple',
+                allowClear: 'Allow Clear',
+                labelField: 'Label Field',
+                valueField: 'Value Field',
+                pageSize: 'Page Size',
+                maxTagCount: 'Tag Count'
+            }
+        },
         slider: {
             name: 'Slider',
             props: {

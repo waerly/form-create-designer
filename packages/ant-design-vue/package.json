@@ -89,6 +89,7 @@
 
         "@form-create/ant-design-vue": "workspace:*",
         "@form-create/component-wangeditor": "^3.2.14",
+        "@wangeditor/editor": "^5.1.23",
         "@form-create/utils": "^3.2.31",
         "ant-design-vue": "~4.2.6",
         "codemirror": "^6.65.7",

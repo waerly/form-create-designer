@@ -808,6 +808,75 @@ const ZhCn = {
                 mode: '模式',
             }
         },
+        siUpload: {
+            name: 'SI上传',
+            props: {
+                disabled: '是否禁用',
+                uploadProvider: '上传驱动',
+                isPrivate: '是否私有',
+                uploadType: '上传类型',
+                previewSize: '回显尺寸',
+                valueType: '返回值类型',
+                action: '上传地址',
+                name: '文件字段名',
+                deleteAction: '删除地址',
+                accept: '文件类型',
+                limit: '最大数量',
+                maxSize: '单文件大小(MB)',
+                multiple: '是否多选',
+                uploadText: '上传文件',
+                uploadTip: '提示文案',
+            }
+        },
+        siImageUpload: {
+            name: 'SI图片上传',
+            props: {
+                disabled: '是否禁用',
+                uploadProvider: '上传驱动',
+                isPrivate: '是否私有',
+                previewSize: '回显尺寸',
+                valueType: '返回值类型',
+                action: '上传地址',
+                name: '文件字段名',
+                deleteAction: '删除地址',
+                limit: '最大数量',
+                maxSize: '单图片大小(MB)',
+                uploadText: '上传图片',
+                uploadTip: '提示文案',
+            }
+        },
+        siRichEditor2: {
+            name: 'SI富文本2',
+            props: {
+                disabled: '是否禁用',
+                placeholder: '占位提示',
+                height: '编辑高度',
+                minHeight: '最小高度',
+                uploadProvider: '上传驱动',
+                isPrivate: '是否私有',
+                action: '默认上传地址',
+                uploadImgAction: '图片上传地址',
+                uploadVideoAction: '视频上传地址',
+                uploadFileAction: '文件上传地址',
+                name: '文件字段名',
+                maxImageSize: '图片大小(MB)',
+                maxVideoSize: '视频大小(MB)',
+                maxAttachmentSize: '附件大小(MB)',
+            }
+        },
+        siUserPicker: {
+            name: 'SI用户选择',
+            props: {
+                disabled: '是否禁用',
+                placeholder: '占位提示',
+                multiple: '是否多选',
+                allowClear: '允许清空',
+                labelField: '显示字段',
+                valueField: '值字段',
+                pageSize: '分页大小',
+                maxTagCount: '标签数量'
+            }
+        },
         slider: {
             name: '滑块',
             props: {

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>当前业务痛点分析</title>
+    <style>
+        :root {
+            --primary-blue: #1a365d;
+            --text-gray: #718096;
+            --accent-orange: #f6ad55;
+            --danger-red: #e53e3e;
+            --warning-orange: #dd6b20;
+            --info-yellow: #d69e2e;
+            --purple: #805ad5;
+            --bg-light: #f7fafc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--primary-blue);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 标题区域 */
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .title-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .title-accent {
+            width: 6px;
+            height: 40px;
+            background: var(--accent-orange);
+            border-radius: 3px;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .subtitle {
+            color: var(--text-gray);
+            font-size: 14px;
+            margin: 8px 0 0 22px;
+            font-weight: 500;
+        }
+
+        /* 内容区域 */
+        .main-content {
+            display: flex;
+            gap: 30px;
+            flex: 1;
+        }
+
+        /* 左侧痛点列表 */
+        .pain-points-list {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .pain-point-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-left: 5px solid transparent;
+        }
+
+        .pain-point-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 24px;
+        }
+
+        .card-content h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .card-content p {
+            color: var(--text-gray);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* 卡片主题色 */
+        .card-1 { border-left-color: var(--danger-red); }
+        .card-1 .card-icon { background: #fed7d7; }
+
+        .card-2 { border-left-color: var(--warning-orange); }
+        .card-2 .card-icon { background: #feebc8; }
+
+        .card-3 { border-left-color: var(--info-yellow); }
+        .card-3 .card-icon { background: #fefcbf; }
+
+        .card-4 { border-left-color: var(--purple); }
+        .card-4 .card-icon { background: #e9d8fd; }
+
+        /* 右侧核心问题 */
+        .core-problem-panel {
+            flex: 1.2;
+            background: linear-gradient(135deg, #1a365d 0%, #2c5282 100%);
+            border-radius: 20px;
+            padding: 40px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        .core-problem-panel::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .label-accent {
+            color: var(--accent-orange);
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .core-problem-title {
+            font-size: 32px;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-bottom: 40px;
+        }
+
+        /* 链路图 */
+        .chain-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .node {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .node:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .break-icon {
+            color: var(--danger-red);
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* 统计数据 */
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .stat-value {
+            color: var(--accent-orange);
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .stat-divider {
+            width: 1px;
+            background: rgba(255, 255, 255, 0.15);
+            align-self: stretch;
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 992px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .core-problem-panel {
+                min-height: 400px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .chain-diagram {
+                flex-wrap: wrap;
+                gap: 10px;
+                justify-content: center;
+            }
+
+            .stats-row {
+                flex-wrap: wrap;
+            }
+
+            .stat-divider {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- 标题区域 -->
+    <header class="header">
+        <div class="title-row">
+            <div class="title-accent"></div>
+            <h1>当前业务痛点分析</h1>
+        </div>
+        <p class="subtitle">为什么我们需要一套全链路数字化的汽配解决方案</p>
+    </header>
+
+    <!-- 内容区域 -->
+    <main class="main-content">
+        <!-- 左侧痛点卡片列表 -->
+        <section class="pain-points-list">
+            <!-- 痛点1 -->
+            <article class="pain-point-card card-1">
+                <div class="card-icon">📦</div>
+                <div class="card-content">
+                    <h3>直播订单断链</h3>
+                    <p>C端用户下单后只能快递自装，缺乏订单跟踪、线下安装服务以及统一的售后支持体系。</p>
+                </div>
+            </article>
+
+            <!-- 痛点2 -->
+            <article class="pain-point-card card-2">
+                <div class="card-icon">🏪</div>
+                <div class="card-content">
+                    <h3>修理厂缺乏采购与订单渠道</h3>
+                    <p>传统修理厂无法高效从中心仓采购原厂件，同时也无法承接来自抖音直播带来的海量安装服务订单。</p>
+                </div>
+            </article>
+
+            <!-- 痛点3 -->
+            <article class="pain-point-card card-3">
+                <div class="card-icon">🏭</div>
+                <div class="card-content">
+                    <h3>中心仓库存周转效率低</h3>
+                    <p>中心仓缺乏稳定的下游数字化分销平台，无法实现货物的精准下沉与快速周转，导致资金占用严重。</p>
+                </div>
+            </article>
+
+            <!-- 痛点4 -->
+            <article class="pain-point-card card-4">
+                <div class="card-icon">📊</div>
+                <div class="card-content">
+                    <h3>工厂生产与市场脱节</h3>
+                    <p>由于缺乏终端消费数据实时回流，工厂生产往往处于“盲盒”状态，无法根据实际需求精准调整产能。</p>
+                </div>
+            </article>
+            <!-- 痛点5 -->
+            <article class="pain-point-card card-5">
+                <div class="card-icon">💰</div>
+                <div class="card-content">
+                    <h3>C端用户消费降级明显</h3>
+                    <p>受市场经济影响，车主为降低养车成本，倾向选择更低价的配件，传统渠道难以满足"高性价比"需求，急需抖音低价直播驱动新采销模式。</p>
+                </div>
+            </article>
+
+            <!-- 痛点6 -->
+            <article class="pain-point-card card-6">
+                <div class="card-icon">📉</div>
+                <div class="card-content">
+                    <h3>工厂库存积压严重</h3>
+                    <p>市场下行导致工厂成品大量滞销，缺乏有效的线上线下联动渠道，无法通过汽配闪购与中心仓合作快速击穿下游、释放销量。</p>
+                </div>
+            </article>
+
+            <!-- 痛点7 -->
+            <article class="pain-point-card card-7">
+                <div class="card-icon">🔗</div>
+                <div class="card-content">
+                    <h3>全链路数据孤岛</h3>
+                    <p>工厂、中心仓、修理厂、C端用户之间信息割裂，无法形成数据闭环，导致库存预测失准、营销决策滞后、客户流失难以预警。</p>
+                </div>
+            </article>
+            <!-- 备选痛点8 -->
+            <article class="pain-point-card card-8">
+                <div class="card-icon">⏱️</div>
+                <div class="card-content">
+                    <h3>服务响应效率低下</h3>
+                    <p>用户购买配件后找不到靠谱的安装门店，修理厂也无法及时获取周边用户的服务需求，供需匹配严重错位。</p>
+                </div>
+            </article>
+
+            <!-- 备选痛点9 -->
+            <article class="pain-point-card card-9">
+                <div class="card-icon">🎯</div>
+                <div class="card-content">
+                    <h3>营销获客成本居高不下</h3>
+                    <p>传统汽配行业依赖线下门店获客，缺乏数字化私域运营能力，无法有效利用直播电商流量实现低成本精准获客。</p>
+                </div>
+            </article>
+        </section>
+
+        <!-- 右侧核心问题展示 -->
+        <section class="core-problem-panel">
+            <span class="label-accent">CORE PROBLEM</span>
+            <h2 class="core-problem-title">
+                整条产业链，彼此分散<br/>
+                缺乏深度的数字化连接
+            </h2>
+
+            <!-- 断链示意图 -->
+            <div class="chain-diagram">
+                <div class="node">工厂</div>
+                <div class="break-icon">✕</div>
+                <div class="node">中心仓</div>
+                <div class="break-icon">✕</div>
+                <div class="node">修理厂</div>
+                <div class="break-icon">✕</div>
+                <div class="node">C端</div>
+            </div>
+
+            <!-- 关键影响指标 -->
+            <div class="stats-row">
+                <div class="stat-item">
+                    <p class="stat-value">~0%</p>
+                    <p class="stat-label">安装服务转化率</p>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <p class="stat-value">低效</p>
+                    <p class="stat-label">库存周转效率</p>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <p class="stat-value">断层</p>
+                    <p class="stat-label">数据链路状态</p>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+</body>
+</html>

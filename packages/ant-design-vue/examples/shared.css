@@ -1,0 +1,36 @@
+
+:root {
+    /* 科技蓝主色调 */
+    --color-primary: #1a365d;
+    --color-primary-light: #2c5282;
+    --color-primary-dark: #0d2137;
+    --color-primary-foreground: #ffffff;
+
+    /* 橙色强调色 */
+    --color-accent: #f6ad55;
+    --color-accent-foreground: #1a202c;
+
+    /* 表面颜色 */
+    --color-surface: #f7fafc;
+    --color-surface-foreground: #1a202c;
+
+    /* 次要颜色 */
+    --color-secondary: #edf2f7;
+    --color-secondary-foreground: #2d3748;
+
+    /* 柔和颜色 */
+    --color-muted: #e2e8f0;
+    --color-muted-foreground: #718096;
+
+    /* 边框 */
+    --color-border: #cbd5e0;
+
+    /* 字体 */
+    --font-family-display: "Arial", "Microsoft YaHei", sans-serif;
+    --font-family-content: "Arial", "Microsoft YaHei", sans-serif;
+    --font-weight-display: 700;
+    --font-weight-content: 400;
+
+    /* 圆角 */
+    --radius: 8px;
+}

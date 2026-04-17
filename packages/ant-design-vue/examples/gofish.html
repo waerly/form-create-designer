@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>钓鱼人生活 - 业务流程与功能架构</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+    </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+    const { useState } = React;
+
+    const modules = [
+        { id: 'home', name: '首页', icon: '🏠', color: '#4CAF50', features: ['钓鱼天气卡片', '推荐钓点', '热门众筹活动', '实时竞技榜入口', '社区热帖', '快捷入口'] },
+        { id: 'spot', name: '钓点', icon: '📍', color: '#2196F3', features: ['钓点地图', '有偿发现钓点', '悬赏任务', '钓点详情', '评分评论', 'GPS导航'] },
+        { id: 'comp', name: '竞技', icon: '🏆', color: '#FF9800', features: ['众筹竞技', '实时竞技榜', '智能称重', '历史战绩', '战队系统', '赛事发起'] },
+        { id: 'shop', name: '门店', icon: '🏪', color: '#9C27B0', features: ['鱼塘入驻', '渔具商城', '餐饮点单', '装备租赁', '钓点自提', '数据服务'] },
+        { id: 'community', name: '社区', icon: '👥', color: '#E91E63', features: ['钓获晒单', '技巧攻略', '话题广场', '达人专栏', '钓鱼搭子', '打赏系统'] },
+        { id: 'mine', name: '我的', icon: '👤', color: '#607D8B', features: ['钓鱼等级', '徽章系统', '战队管理', '资产中心', '订单管理', '身份认证'] },
+    ];
+
+    const flows = {
+        bounty: {
+            name: '有偿发现钓点',
+            color: '#4CAF50',
+            steps: [
+                { step: '1', title: '发布悬赏', desc: '平台/用户发布钓点悬赏任务' },
+                { step: '2', title: '发现钓点', desc: '用户在目标区域发现钓点' },
+                { step: '3', title: '上传信息', desc: 'GPS定位+照片+描述' },
+                { step: '4', title: '审核验证', desc: '系统初审 → 人工复审' },
+                { step: '5', title: '奖励发放', desc: '通过后奖励到账户余额' },
+                { step: '6', title: '申请提现', desc: '绑定银行卡/微信提现' },
+                { step: '7', title: '持续分成', desc: '钓点消费产生持续收益' },
+            ]
+        },
+        crowdfund: {
+            name: '众筹竞技',
+            color: '#FF9800',
+            steps: [
+                { step: '1', title: '发起众筹', desc: '老板/钓友设置规则发起' },
+                { step: '2', title: '众筹期', desc: '钓友报名支付(冻结)' },
+                { step: '3', title: '投票设置', desc: '中途加入规则投票' },
+                { step: '4', title: '达标开赛', desc: '达标确认/未达标退款' },
+                { step: '5', title: '签到参赛', desc: '扫码/GPS签到' },
+                { step: '6', title: '实时排名', desc: '称重数据实时更新' },
+                { step: '7', title: '结算奖金', desc: '系统自动计算分配' },
+            ]
+        },
+        commerce: {
+            name: '商城交易',
+            color: '#9C27B0',
+            steps: [
+                { step: '1', title: '浏览商品', desc: '渔具店/商城浏览' },
+                { step: '2', title: '加入购物车', desc: '选择商品规格' },
+                { step: '3', title: '选择配送', desc: '快递/钓点自提' },
+                { step: '4', title: '使用优惠', desc: '优惠券/积分抵扣' },
+                { step: '5', title: '支付下单', desc: '微信/支付宝' },
+                { step: '6', title: '发货配送', desc: '商家发货' },
+                { step: '7', title: '确认收货', desc: '平台抽佣6%结算' },
+            ]
+        }
+    };
+
+    const revenue = [
+        { name: '交易抽佣', rate: '6%', desc: '商城交易', icon: '💰' },
+        { name: '赛事抽佣', rate: '10%', desc: '众筹竞技', icon: '🏆' },
+        { name: '会员订阅', rate: '9.9/月', desc: '增值权益', icon: '⭐' },
+        { name: 'B端服务', rate: '年费', desc: '商家入驻', icon: '🏪' },
+        { name: '广告收入', rate: 'CPM', desc: '品牌推广', icon: '📢' },
+        { name: '硬件销售', rate: '差价', desc: '智能称重', icon: '⚖️' },
+    ];
+
+    function App() {
+        const [activeTab, setActiveTab] = useState('overview');
+        const [activeFlow, setActiveFlow] = useState('bounty');
+
+        return (
+            <div style={{ minHeight: '100vh', padding: '20px' }}>
+                <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+                    <h1 style={{ color: 'white', fontSize: '36px', fontWeight: 'bold', textShadow: '2px 2px 4px rgba(0,0,0,0.3)' }}>
+                        🐟 钓鱼人生活
+                    </h1>
+                    <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '18px', marginTop: '10px' }}>
+                        微信小程序 · 业务流程与功能架构
+                    </p>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '30px', flexWrap: 'wrap' }}>
+                    {[
+                        { id: 'overview', name: '功能总览', icon: '📋' },
+                        { id: 'flow', name: '业务流程', icon: '🔄' },
+                        { id: 'model', name: '商业模型', icon: '💎' },
+                        { id: 'loop', name: '闭环设计', icon: '♻️' },
+                    ].map(tab => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            style={{
+                                padding: '12px 24px',
+                                fontSize: '16px',
+                                border: 'none',
+                                borderRadius: '25px',
+                                cursor: 'pointer',
+                                background: activeTab === tab.id ? 'white' : 'rgba(255,255,255,0.2)',
+                                color: activeTab === tab.id ? '#667eea' : 'white',
+                                fontWeight: activeTab === tab.id ? 'bold' : 'normal',
+                                transition: 'all 0.3s',
+                                boxShadow: activeTab === tab.id ? '0 4px 15px rgba(0,0,0,0.2)' : 'none',
+                            }}
+                        >
+                            {tab.icon} {tab.name}
+                        </button>
+                    ))}
+                </div>
+
+                {activeTab === 'overview' && (
+                    <div>
+                        <h2 style={{ color: 'white', textAlign: 'center', marginBottom: '20px', fontSize: '24px' }}>
+                            六大核心模块
+                        </h2>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px', maxWidth: '1200px', margin: '0 auto' }}>
+                            {modules.map(module => (
+                                <div key={module.id} style={{
+                                    background: 'white',
+                                    borderRadius: '16px',
+                                    padding: '24px',
+                                    boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
+                                }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '16px' }}>
+                                        <span style={{ fontSize: '40px', marginRight: '12px' }}>{module.icon}</span>
+                                        <h3 style={{ fontSize: '22px', color: module.color, fontWeight: 'bold' }}>{module.name}</h3>
+                                    </div>
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                        {module.features.map((f, i) => (
+                                            <span key={i} style={{
+                                                background: `${module.color}15`,
+                                                color: module.color,
+                                                padding: '6px 12px',
+                                                borderRadius: '20px',
+                                                fontSize: '13px',
+                                                fontWeight: '500',
+                                            }}>
+                                                    {f}
+                                                </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div style={{ maxWidth: '600px', margin: '40px auto 0', background: 'white', borderRadius: '30px', padding: '20px', boxShadow: '0 10px 40px rgba(0,0,0,0.15)' }}>
+                            <p style={{ textAlign: 'center', color: '#666', marginBottom: '15px', fontSize: '14px' }}>底部导航栏</p>
+                            <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                                {['🏠 首页', '📍 钓点', '🏆 竞技', '👥 社区', '👤 我的'].map((item, i) => (
+                                    <div key={i} style={{ textAlign: 'center', padding: '10px', color: i === 0 ? '#667eea' : '#999' }}>
+                                        <span style={{ fontSize: '14px' }}>{item}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {activeTab === 'flow' && (
+                    <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+                        <div style={{ display: 'flex', justifyContent: 'center', gap: '15px', marginBottom: '30px', flexWrap: 'wrap' }}>
+                            {Object.entries(flows).map(([key, flow]) => (
+                                <button
+                                    key={key}
+                                    onClick={() => setActiveFlow(key)}
+                                    style={{
+                                        padding: '12px 24px',
+                                        fontSize: '15px',
+                                        border: `3px solid ${flow.color}`,
+                                        borderRadius: '12px',
+                                        cursor: 'pointer',
+                                        background: activeFlow === key ? flow.color : 'white',
+                                        color: activeFlow === key ? 'white' : flow.color,
+                                        fontWeight: 'bold',
+                                        transition: 'all 0.3s',
+                                    }}
+                                >
+                                    {flow.name}
+                                </button>
+                            ))}
+                        </div>
+
+                        <div style={{ background: 'white', borderRadius: '20px', padding: '30px', boxShadow: '0 10px 40px rgba(0,0,0,0.1)' }}>
+                            <h3 style={{ textAlign: 'center', color: flows[activeFlow].color, fontSize: '24px', marginBottom: '30px' }}>
+                                {flows[activeFlow].name}流程
+                            </h3>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                                {flows[activeFlow].steps.map((step, i) => (
+                                    <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+                                        <div style={{
+                                            width: '50px',
+                                            height: '50px',
+                                            borderRadius: '50%',
+                                            background: flows[activeFlow].color,
+                                            color: 'white',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontSize: '20px',
+                                            fontWeight: 'bold',
+                                            flexShrink: 0,
+                                        }}>
+                                            {step.step}
+                                        </div>
+                                        <div style={{ flex: 1, background: `${flows[activeFlow].color}10`, padding: '15px 20px', borderRadius: '12px', borderLeft: `4px solid ${flows[activeFlow].color}` }}>
+                                            <div style={{ fontWeight: 'bold', color: flows[activeFlow].color, marginBottom: '5px' }}>{step.title}</div>
+                                            <div style={{ color: '#666', fontSize: '14px' }}>{step.desc}</div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {activeTab === 'model' && (
+                    <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+                        <h2 style={{ color: 'white', textAlign: 'center', marginBottom: '30px', fontSize: '24px' }}>
+                            多元化收入来源
+                        </h2>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+                            {revenue.map((item, i) => (
+                                <div key={i} style={{
+                                    background: 'white',
+                                    borderRadius: '16px',
+                                    padding: '24px',
+                                    boxShadow: '0 10px 40px rgba(0,0,0,0.1)',
+                                    textAlign: 'center',
+                                }}>
+                                    <span style={{ fontSize: '48px' }}>{item.icon}</span>
+                                    <h3 style={{ fontSize: '20px', color: '#333', margin: '15px 0 10px' }}>{item.name}</h3>
+                                    <div style={{
+                                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                        color: 'white',
+                                        padding: '8px 20px',
+                                        borderRadius: '20px',
+                                        display: 'inline-block',
+                                        fontWeight: 'bold',
+                                        marginBottom: '10px',
+                                    }}>
+                                        {item.rate}
+                                    </div>
+                                    <p style={{ color: '#666', fontSize: '14px' }}>{item.desc}</p>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div style={{ marginTop: '40px', background: 'white', borderRadius: '20px', padding: '30px', boxShadow: '0 10px 40px rgba(0,0,0,0.1)' }}>
+                            <h3 style={{ textAlign: 'center', color: '#667eea', fontSize: '22px', marginBottom: '25px' }}>⭐ 会员体系设计</h3>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+                                <div style={{ background: '#f5f5f5', borderRadius: '12px', padding: '20px' }}>
+                                    <h4 style={{ color: '#999', marginBottom: '15px' }}>普通用户</h4>
+                                    <ul style={{ listStyle: 'none', color: '#666', fontSize: '14px', lineHeight: '2' }}>
+                                        <li>✓ 基础钓点搜索</li>
+                                        <li>✓ 今日天气</li>
+                                        <li>✓ 每日3条发帖</li>
+                                        <li>✗ 商城折扣</li>
+                                        <li>✗ 去广告</li>
+                                    </ul>
+                                </div>
+                                <div style={{ background: 'linear-gradient(135deg, #667eea15 0%, #764ba215 100%)', borderRadius: '12px', padding: '20px', border: '2px solid #667eea' }}>
+                                    <h4 style={{ color: '#667eea', marginBottom: '15px' }}>🌟 钓鱼会员 9.9元/月</h4>
+                                    <ul style={{ listStyle: 'none', color: '#333', fontSize: '14px', lineHeight: '2' }}>
+                                        <li>✓ 精准推荐+独家钓点</li>
+                                        <li>✓ 7天预报+钓鱼指数</li>
+                                        <li>✓ 无限发帖+置顶推荐</li>
+                                        <li>✓ 专属95折</li>
+                                        <li>✓ 去广告+达人标签</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {activeTab === 'loop' && (
+                    <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+                        <div style={{ background: 'white', borderRadius: '20px', padding: '40px', boxShadow: '0 10px 40px rgba(0,0,0,0.1)' }}>
+                            <h2 style={{ textAlign: 'center', color: '#667eea', fontSize: '26px', marginBottom: '40px' }}>
+                                ♻️ 商业闭环模型
+                            </h2>
+
+                            <div style={{ position: 'relative', width: '300px', height: '300px', margin: '0 auto 40px' }}>
+                                <div style={{
+                                    position: 'absolute',
+                                    width: '100%',
+                                    height: '100%',
+                                    borderRadius: '50%',
+                                    border: '4px dashed #667eea',
+                                }}></div>
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    textAlign: 'center',
+                                }}>
+                                    <div style={{ fontSize: '40px' }}>🐟</div>
+                                    <div style={{ color: '#667eea', fontWeight: 'bold', marginTop: '5px' }}>增长飞轮</div>
+                                </div>
+                                {[
+                                    { icon: '📝', label: '内容UGC', angle: 0 },
+                                    { icon: '👥', label: '用户增长', angle: 60 },
+                                    { icon: '🏪', label: '商家入驻', angle: 120 },
+                                    { icon: '💰', label: '交易变现', angle: 180 },
+                                    { icon: '⭐', label: '体验提升', angle: 240 },
+                                    { icon: '🔄', label: '口碑传播', angle: 300 },
+                                ].map((item, i) => {
+                                    const rad = (item.angle - 90) * Math.PI / 180;
+                                    const x = 150 + 130 * Math.cos(rad);
+                                    const y = 150 + 130 * Math.sin(rad);
+                                    return (
+                                        <div key={i} style={{
+                                            position: 'absolute',
+                                            left: x - 35,
+                                            top: y - 35,
+                                            width: '70px',
+                                            height: '70px',
+                                            background: 'white',
+                                            borderRadius: '50%',
+                                            boxShadow: '0 4px 15px rgba(0,0,0,0.15)',
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                        }}>
+                                            <span style={{ fontSize: '24px' }}>{item.icon}</span>
+                                            <span style={{ fontSize: '10px', color: '#666', marginTop: '2px' }}>{item.label}</span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            <h3 style={{ textAlign: 'center', color: '#333', fontSize: '20px', marginBottom: '25px' }}>
+                                连接「钓鱼人 ↔ 服务商 ↔ 内容」三端生态
+                            </h3>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+                                {[
+                                    { title: '钓鱼人', icon: '🎣', color: '#4CAF50', items: ['发现钓点赚钱', '参与竞技娱乐', '学习交流成长', '购物便捷服务'] },
+                                    { title: '服务商', icon: '🏪', color: '#2196F3', items: ['低成本获客', '稳定客流量', '数据化运营', '品牌曝光'] },
+                                    { title: '内容生态', icon: '📱', color: '#FF9800', items: ['UGC钓点库', '社区活跃度', '达人变现', '知识沉淀'] },
+                                ].map((item, i) => (
+                                    <div key={i} style={{ background: `${item.color}10`, borderRadius: '16px', padding: '20px', textAlign: 'center' }}>
+                                        <span style={{ fontSize: '40px' }}>{item.icon}</span>
+                                        <h4 style={{ color: item.color, margin: '10px 0', fontSize: '18px' }}>{item.title}</h4>
+                                        <ul style={{ listStyle: 'none', color: '#666', fontSize: '13px', lineHeight: '1.8' }}>
+                                            {item.items.map((t, j) => <li key={j}>• {t}</li>)}
+                                        </ul>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+</script>
+</body>
+</html>

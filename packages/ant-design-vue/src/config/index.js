@@ -7,6 +7,10 @@ import number from './rule/number';
 import autoComplete from './rule/autoComplete';
 import suggestSearch from './rule/suggestSearch';
 import select from './rule/select';
+import siUpload from './rule/siUpload';
+import siImageUpload from './rule/siImageUpload';
+import siRichEditor2 from './rule/siRichEditor2';
+import siUserPicker from './rule/siUserPicker';
 import _switch from './rule/switch';
 import slider from './rule/slider';
 import time from './rule/time';
@@ -50,7 +54,7 @@ import relationTable from './rule/relationTable';
 
 
 const ruleList = [
-    input, textarea, password, number, autoComplete, suggestSearch, radio, checkbox, select, _switch, rate, time, timeRange, slider, date, dateRange, cascader, upload, transfer, tree, treeSelect, editor, signaturePad,
+    input, textarea, password, number, autoComplete, suggestSearch, radio, checkbox, select, _switch, rate, time, timeRange, slider, date, dateRange, cascader, upload, siUpload, siImageUpload, siRichEditor2, siUserPicker, transfer, tree, treeSelect, editor, signaturePad,
     group, subForm, tableForm, tableFormColumn,
     alert, button, text, title, demo, siSlot, relation, relationForm, relationTable, html, divider, tag, image,
     row, table, tabs, space, card, collapse,
